@@ -4,27 +4,35 @@ angular.module('fourPicsOneWord.controllers')
 
   var appCtrl = this;
 
+  appCtrl.localStorage = $window.localStorage;
+  appCtrl.answer = [];
+
   var stagesKeywords = ['nature', 'love', 'superhero', 'baby', 'apps', 'android', 'rivers', 'sky', 'games', 'painting'];
 
   String.prototype.shuffle = function () {
     var splitString = this.split(""),
-        stringLength = splitString.length;
+        stringLength = splitString.length,
+        stringObject = {};
 
     for(var i = 0; i < stringLength; i++) {
         var j = Math.floor(Math.random() * (i + 1));
         var tmp = splitString[i];
         splitString[i] = splitString[j];
+        stringObject[i] = splitString[j];
         splitString[j] = tmp;
+        stringObject[j] = tmp;
     }
 
-    return splitString;
+    return stringObject;
+
   };
+
 
   var getTimes = function(num) {
     return new Array(num);   
   };
 
-  var generateWords = function(searchKeyword){
+  var generateHints = function(searchKeyword){
     var possible = "abcdefghijklmnopqrstuvwxyz";
     var remaningItems = 10 - searchKeyword.length;
 
@@ -32,7 +40,7 @@ angular.module('fourPicsOneWord.controllers')
         searchKeyword += possible.charAt(Math.floor(Math.random() * possible.length));
     }
 
-    appCtrl.answersHints = searchKeyword.shuffle();
+    appCtrl.answerHints = searchKeyword.shuffle();
   };
 
   var fetchImages = function(keyword){
@@ -48,19 +56,17 @@ angular.module('fourPicsOneWord.controllers')
 
     if($window.localStorage.stage){
        searchKeyword = stagesKeywords[JSON.parse($window.localStorage.stage) - 1];
-       generateWords(searchKeyword);
+       generateHints(searchKeyword);
        fetchImages(searchKeyword);
        appCtrl.answerLength = getTimes(searchKeyword.length);
     } else {
       $window.localStorage.stage = 1;
       searchKeyword = stagesKeywords[0];
-      generateWords(searchKeyword);
+      generateHints(searchKeyword);
       fetchImages(searchKeyword);
       appCtrl.answerLength = getTimes(searchKeyword.length);
     }
   };
-
-  appCtrl.localStorage = $window.localStorage;
 
 
   initQuiz();

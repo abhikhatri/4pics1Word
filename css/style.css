@@ -15,8 +15,7 @@ li{
    ========================================================================== */
 
 .images-item{
-	min-height: 250px;
-	height: 250px;
+	height: 200px;
 	background-size: cover !important;
 }
 
