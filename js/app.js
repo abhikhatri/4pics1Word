@@ -11,7 +11,7 @@ angular.module('fourPicsOneWord', ['ui.router', 'fourPicsOneWord.controllers'])
     .state('app', {
       url: '',
       abstract: true,
-      templateUrl: 'templates/index.html',
+      templateUrl: 'templates/main.html',
       controller: 'ApplicationController as appCtrl'
     })
 
