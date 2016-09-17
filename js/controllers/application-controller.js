@@ -79,7 +79,6 @@ angular.module('fourPicsOneWord.controllers')
 
   appCtrl.addAnswers = function(key, answer){
     var pushItemIndex = appCtrl.answer.indexOf('');
-    console.log(pushItemIndex);
     if(pushItemIndex === -1 && appCtrl.answer.length !== correctAnswer.length){
      appCtrl.answer.push(answer);
      var answerKeyIndex = appCtrl.answer.length - 1;
