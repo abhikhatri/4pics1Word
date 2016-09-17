@@ -9,28 +9,32 @@
 
 
 <ul class="answer-input-wrapper">
-  <li class="answer-input-item" ng-repeat="word in appCtrl.answerLength track by $index">
-    <button class="btn btn-default" ng-class="{'with-item': appCtrl.answers[$index]}" ng-click="appCtrl.removeAnswers(appCtrl.answers[$index])">
-      <span ng-if="!!appCtrl.answers[$index]">
-        {{appCtrl.answers[$index]}}
+  <li class="answer-input-item" ng-repeat="item in appCtrl.answerLength track by $index">
+    <button class="btn btn-default" ng-class="{'with-item': appCtrl.answer[$index]}" ng-click="!appCtrl.answer[$index]||appCtrl.removeAnswers($index, appCtrl.answer[$index])">
+      <span ng-if="appCtrl.answer[$index]">
+        {{appCtrl.answer[$index]}}
       </span>
-      <span ng-if="!appCtrl.answers[$index]">
+      <span ng-if="!appCtrl.answer[$index]">
         X
       </span>
     </button>
   </li>
 </ul>
   
-<!-- <ul class="words-wrapper">
-  <li class="words-item" ng-repeat="word in appCtrl.answerHints track by $index">
-    <button class="btn btn-default" ng-click="appCtrl.addAnswers(word)" ng-class="{'without-item': !appCtrl.answerHints[$index]}">
-      <span ng-if="!!appCtrl.answerHints[$index]">
-        {{word}}
+<ul class="words-wrapper">
+  <li class="words-item" ng-repeat="(key, hint) in appCtrl.answerHints track by $index">
+    <button class="btn btn-default" ng-click="!hint||appCtrl.addAnswers(key, hint)" ng-class="{'without-item': !appCtrl.answerHints[key]}">
+      <span ng-if="appCtrl.answerHints[key]">
+        {{hint}}
       </span>
-      <span ng-if="!appCtrl.answerHints[$index]">
+      <span ng-if="!appCtrl.answerHints[key]">
         X
       </span>
     </button>
   </li>
 </ul>
- -->
+
+
+{{appCtrl.answer}}
+
+<!-- {{appCtrl.answersHints}} -->

@@ -6,6 +6,8 @@ angular.module('fourPicsOneWord.controllers')
 
   appCtrl.localStorage = $window.localStorage;
   appCtrl.answer = [];
+  
+  var answerIndex = {};
 
   var stagesKeywords = ['nature', 'love', 'superhero', 'baby', 'apps', 'android', 'rivers', 'sky', 'games', 'painting'];
 
@@ -24,9 +26,14 @@ angular.module('fourPicsOneWord.controllers')
     }
 
     return stringObject;
-
   };
 
+
+  var initAnswerIndex = function(indexLength){
+    for(var i = 0; i < indexLength; i++){
+      answerIndex[i] = '';
+    }
+  };
 
   var getTimes = function(num) {
     return new Array(num);   
@@ -50,6 +57,26 @@ angular.module('fourPicsOneWord.controllers')
     });
   };
 
+  appCtrl.addAnswers = function(key, answer){
+    var pushItemIndex = appCtrl.answer.indexOf('');
+
+    if(pushItemIndex === -1){
+     appCtrl.answer.push(answer);
+     var answerKeyIndex = appCtrl.answer.length - 1;
+     answerIndex[answerKeyIndex] = key;
+    } else {
+      appCtrl.answer[pushItemIndex] = answer;
+      answerIndex[pushItemIndex] = key;
+    }
+    appCtrl.answerHints[key] = '';
+  };
+
+  appCtrl.removeAnswers = function(index, answer){
+    var hintsKey = answerIndex[index];
+    appCtrl.answerHints[hintsKey] = answer;
+    appCtrl.answer[index] = '';
+  };
+
   var initQuiz = function(){
     var searchKeyword;
     var shuffledString;
@@ -58,49 +85,19 @@ angular.module('fourPicsOneWord.controllers')
        searchKeyword = stagesKeywords[JSON.parse($window.localStorage.stage) - 1];
        generateHints(searchKeyword);
        fetchImages(searchKeyword);
+       initAnswerIndex(searchKeyword.length);
        appCtrl.answerLength = getTimes(searchKeyword.length);
     } else {
       $window.localStorage.stage = 1;
       searchKeyword = stagesKeywords[0];
       generateHints(searchKeyword);
       fetchImages(searchKeyword);
+      initAnswerIndex(searchKeyword.length);
       appCtrl.answerLength = getTimes(searchKeyword.length);
     }
   };
 
 
   initQuiz();
-
-
-  // appCtrl.getImageTimes = function(times){
-  //   return new Array(times);
-  // };
-  
-  // appCtrl.answers = [];
-  // appCtrl.answerHints = generateWords();
-  // var wordsIndex = appCtrl.answerHints.slice();
-  
-  // appCtrl.addAnswers = function(answer){
-  //   var popItemIndex = appCtrl.answerHints.indexOf(answer);
-  //   appCtrl.answerHints[popItemIndex] = '';
-  //   if(appCtrl.answers.length){
-  //     var pushItemIndex = appCtrl.answers.indexOf('');
-  //     if(pushItemIndex === -1){
-  //      appCtrl.answers.push(answer);
-  //     } else {
-  //       appCtrl.answers[pushItemIndex] = answer;
-  //     }
-  //   } else {
-  //     appCtrl.answers.push(answer); 
-  //   }
-  // };
-
-  // appCtrl.removeAnswers = function(answer){
-  //   var popItemIndex  = appCtrl.answers.indexOf(answer);
-  //   var pushItemIndex = wordsIndex.indexOf(answer);
-  //   appCtrl.answers[popItemIndex] = '';
-  //   appCtrl.answerHints[pushItemIndex] = answer;
-  //   console.log(appCtrl.answerHints);
-  // };
 
 });
