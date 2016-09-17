@@ -7,9 +7,10 @@ angular.module('fourPicsOneWord.controllers')
   appCtrl.localStorage = $window.localStorage;
   appCtrl.answer = [];
   
+  var correctAnswer;
   var answerIndex = {};
 
-  var stagesKeywords = ['nature', 'love', 'superhero', 'baby', 'apps', 'android', 'rivers', 'sky', 'games', 'painting'];
+  var stagesKeywords = ['nature', 'love', 'superhero', 'baby', 'popart', 'android', 'river', 'sky', 'games', 'painting'];
 
   String.prototype.shuffle = function () {
     var splitString = this.split(""),
@@ -57,18 +58,39 @@ angular.module('fourPicsOneWord.controllers')
     });
   };
 
+  var initQuiz = function(){
+    var shuffledString;
+
+    if($window.localStorage.stage && $window.localStorage.stage !== "11"){
+       correctAnswer = stagesKeywords[JSON.parse($window.localStorage.stage) - 1];
+       generateHints(correctAnswer);
+       fetchImages(correctAnswer);
+       initAnswerIndex(correctAnswer.length);
+       appCtrl.answerLength = getTimes(correctAnswer.length);
+    } else if(!$window.localStorage.stage){
+      $window.localStorage.stage = 1;
+      correctAnswer = stagesKeywords[0];
+      generateHints(correctAnswer);
+      fetchImages(correctAnswer);
+      initAnswerIndex(correctAnswer.length);
+      appCtrl.answerLength = getTimes(correctAnswer.length);
+    }
+  };
+
   appCtrl.addAnswers = function(key, answer){
     var pushItemIndex = appCtrl.answer.indexOf('');
-
-    if(pushItemIndex === -1){
+    console.log(pushItemIndex);
+    if(pushItemIndex === -1 && appCtrl.answer.length !== correctAnswer.length){
      appCtrl.answer.push(answer);
      var answerKeyIndex = appCtrl.answer.length - 1;
      answerIndex[answerKeyIndex] = key;
-    } else {
+      appCtrl.answerHints[key] = '';
+    } else if(appCtrl.answer.length !== correctAnswer.length || pushItemIndex >= 0){
       appCtrl.answer[pushItemIndex] = answer;
       answerIndex[pushItemIndex] = key;
+      appCtrl.answerHints[key] = '';
     }
-    appCtrl.answerHints[key] = '';
+    
   };
 
   appCtrl.removeAnswers = function(index, answer){
@@ -77,25 +99,29 @@ angular.module('fourPicsOneWord.controllers')
     appCtrl.answer[index] = '';
   };
 
-  var initQuiz = function(){
-    var searchKeyword;
-    var shuffledString;
-
-    if($window.localStorage.stage){
-       searchKeyword = stagesKeywords[JSON.parse($window.localStorage.stage) - 1];
-       generateHints(searchKeyword);
-       fetchImages(searchKeyword);
-       initAnswerIndex(searchKeyword.length);
-       appCtrl.answerLength = getTimes(searchKeyword.length);
-    } else {
-      $window.localStorage.stage = 1;
-      searchKeyword = stagesKeywords[0];
-      generateHints(searchKeyword);
-      fetchImages(searchKeyword);
-      initAnswerIndex(searchKeyword.length);
-      appCtrl.answerLength = getTimes(searchKeyword.length);
+  appCtrl.submitQuestion = function(){
+    if(appCtrl.answer.length === correctAnswer.length && appCtrl.answer.indexOf('') === -1){
+      if(correctAnswer === appCtrl.answer.join('')){
+        alert('Correct Answer!');
+        currentStage = JSON.parse($window.localStorage.stage);
+        if(currentStage < stagesKeywords.length){
+          $window.localStorage.stage = ++currentStage;
+          appCtrl.answer = [];
+          initQuiz();
+        } else {
+          alert('Congrats! You finished this game. Now this game will be reset to stage 1');
+          $window.localStorage.stage = 1;
+          initQuiz();
+        }
+      } else {
+        alert('Your answer is incorrect!');
+      }
+    } else{
+      alert('Please fill all the boxes');
     }
   };
+
+  
 
 
   initQuiz();
