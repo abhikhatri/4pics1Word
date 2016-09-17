@@ -1,0 +1,36 @@
+<h2 class="text-center">Stage {{appCtrl.localStorage.stage}}</h2>
+
+<ul class="row images-list">
+  <li ng-repeat="image in appCtrl.images track by $index" 
+      class="col-sm-4 images-item" 
+      style="background: url({{image.url_m}}) center center no-repeat;" ng-class="{ 'col-md-offset-2' : $index%2 === 0 }">
+  </li>
+</ul>
+
+
+<ul class="answer-input-wrapper">
+  <li class="answer-input-item" ng-repeat="word in appCtrl.answerLength track by $index">
+    <button class="btn btn-default" ng-class="{'with-item': appCtrl.answers[$index]}" ng-click="appCtrl.removeAnswers(appCtrl.answers[$index])">
+      <span ng-if="!!appCtrl.answers[$index]">
+        {{appCtrl.answers[$index]}}
+      </span>
+      <span ng-if="!appCtrl.answers[$index]">
+        X
+      </span>
+    </button>
+  </li>
+</ul>
+  
+<!-- <ul class="words-wrapper">
+  <li class="words-item" ng-repeat="word in appCtrl.answerHints track by $index">
+    <button class="btn btn-default" ng-click="appCtrl.addAnswers(word)" ng-class="{'without-item': !appCtrl.answerHints[$index]}">
+      <span ng-if="!!appCtrl.answerHints[$index]">
+        {{word}}
+      </span>
+      <span ng-if="!appCtrl.answerHints[$index]">
+        X
+      </span>
+    </button>
+  </li>
+</ul>
+ -->
